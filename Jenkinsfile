@@ -81,10 +81,22 @@ pipeline {
             }
         }
         
-        stage('build and push docker image ') {
+        // stage('build and push docker image ') {
+        //     steps {
+        //         script {
+        //             docker.withRegistry('https://hub.docker.com/', 'dockerhub') {
+        //                 def docker_image = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+        //                 docker_image.push("${IMAGE_TAG}")
+        //                 docker_image.push('latest')
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage("Build & Push Docker Image") {
             steps {
                 script {
-                    docker.withRegistry('https://hub.docker.com/', 'dockerhub') {
+                    docker.withRegistry('', DOCKER_PASS) {
                         def docker_image = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                         docker_image.push("${IMAGE_TAG}")
                         docker_image.push('latest')
