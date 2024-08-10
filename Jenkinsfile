@@ -67,6 +67,7 @@ pipeline {
                 script {
                     withSonarQubeEnv(credentialsId: "sonarqube") {
                         sh "mvn clean verify sonar:sonar -Dsonar.projectKey=java -Dsonar.projectName=java"
+                        // sh "mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}"
                     }
                 }
             }
