@@ -52,7 +52,7 @@ pipeline {
 
         stage("Nexus Push Artifacts") {
             steps {
-                nexusArtifactUploader artifacts: [[artifactId: 'javaArtifactId', classifier: '', file: 'server/target/server.jar', type: 'jar']], 
+                nexusArtifactUploader artifacts: [[artifactId: 'javaArtifactId', classifier: '', file: '/server/target/server.jar', type: 'jar']], 
                     credentialsId: 'nexus', groupId: 'java', nexusUrl: '172.31.17.132:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'java', version: '1.0-SNAPSHOT'
             }
         }
