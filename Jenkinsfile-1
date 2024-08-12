@@ -9,10 +9,11 @@ pipeline {
     }
 
     environment {
+        APP_Name = "devops-java"
         git_repo_git = "https://github.com/RanjeethAcharya/devops.jar.git"
         DOCKER_USER = "ranjeeth3302"
         DOCKER_PASS = "dockerhub"
-        DOCKER_IMAGE = "ranjeeth3302/devops-java"
+        DOCKER_IMAGE = "${DOCKER_USER}" + "/" + "${APP_Name}"
     }
 
     stages {
@@ -63,7 +64,7 @@ pipeline {
                     sh 'docker build -t ${DOCKER_IMAGE} .'
                     docker.withRegistry("", 'dockerhub') {
                         def dockerImage = docker.build("${DOCKER_IMAGE}")
-                        dockerImage.push()
+                        dockerImage.push("${BUILD_NUMBER}")
                         dockerImage.push('latest')
                     }
                 }
