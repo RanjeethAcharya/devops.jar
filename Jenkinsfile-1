@@ -12,7 +12,7 @@ pipeline {
         git_repo_git = "https://github.com/RanjeethAcharya/devops.jar.git"
         DOCKER_USER = "ranjeeth3302"
         DOCKER_PASS = "dockerhub"
-        DOCKER_IMAGE = "ranjeeth3302/devops-java:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "ranjeeth3302/devops-java"
     }
 
     stages {
@@ -82,7 +82,7 @@ pipeline {
         stage("Cleanup Artifacts") {
             steps {
                 script {
-                    sh "docker rmi ${DOCKER_IMAGE}"
+                    sh "docker rmi ${DOCKER_IMAGE}:${BUILD_NUMBER}"
                     sh "docker rmi ${DOCKER_IMAGE}:latest"
                 }
             }
