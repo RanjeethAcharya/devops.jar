@@ -15,6 +15,7 @@ pipeline {
         DOCKER_PASS = "dockerhub"
         DOCKER_IMAGE = "${DOCKER_USER}" + "/" + "${APP_Name}"
         jenkins_DNS = "ec2-18-209-35-18.compute-1.amazonaws.com"
+        JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
     }
 
     stages {
