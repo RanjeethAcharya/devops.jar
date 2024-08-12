@@ -1,0 +1,87 @@
+pipeline {
+    agent {
+        label "jenkins-agent"
+    }
+
+    tools {
+        java "Java17"
+        maven "Maven3"
+    }
+
+    environment {
+        git_repo-git = "https://github.com/RanjeethAcharya/devops.jar.git"
+        DOCKER_USER = "ranjeeth3302"
+        DOCKER_PASS = "dockerhub"
+        DOCKER_IMAGE = "ranjeeth3302/devops-java:${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage("Cleanup Workspace") {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage("git checkout") {
+            checkout scmGit(
+                branches: [[name: '*/main']],
+                extensions: [],
+                userRemoteConfigs: [[credentialsId: 'github', url: '${git_repo-git}']]
+            )
+        }
+
+        stage("maven compile test and package") {
+            steps {
+                script {
+                    "mvn compile"
+                    "mvn test"
+                    "mvn clean package"
+                }
+            }
+        }
+
+        stage("sonarqube code analysis") {
+            steps {
+                script {
+                    withSonarQubeEnv(credentialsId: "sonarqube") {
+                        sh "mvn clean verify sonar:sonar -Dsonar.projectKey=java -Dsonar.projectName=java"
+                    }
+                }
+            }
+        }
+
+        stage("nexus push artifacts") {
+            steps {
+                nexusArtifactUploader artifacts: [[artifactId: 'javaArtifactId', classifier: '', file: '/home/ubuntu/workspace/ci/server/target/server.jar', type: 'jar']], credentialsId: 'nexus', groupId: 'java', nexusUrl: '172.31.17.132:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'java', version: '1.0-SNAPSHOT'
+            }
+        }
+
+        stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry("", DOCKER_PASS) {
+                        def dockerImage = docker.image("${DOCKER_IMAGE}")
+                        dockerImage.push()
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }
+
+        // stage('Upload GIt Manifest File') {
+        //     environment {
+        //         git_repo_name = "devops.jar"
+        //         git_user_name = "RanjeethAcharya"
+        //     }
+        //     steps {
+        //         withCredentials([string(credentialsId: 'github')]) {
+        //             sh ```
+        //                 git config user.email "ranjeetkumar933342@gmail.com"
+        //                 git config user.name "RanjeethAcharya"
+        //                 BUILD_NUMBER=${BUILD_NUMBER}
+        //                 sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" 
+        //         }
+        //     }
+        // }
+    }
+}
