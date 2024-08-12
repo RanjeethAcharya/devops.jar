@@ -85,6 +85,7 @@ pipeline {
                 script {
                     sh "docker rmi ${DOCKER_IMAGE}:${BUILD_NUMBER}"
                     sh "docker rmi ${DOCKER_IMAGE}:latest"
+                    sh "docker rmi ${DOCKER_IMAGE}"
                 }
             }
         }
