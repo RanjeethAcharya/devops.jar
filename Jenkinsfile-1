@@ -14,6 +14,7 @@ pipeline {
         DOCKER_USER = "ranjeeth3302"
         DOCKER_PASS = "dockerhub"
         DOCKER_IMAGE = "${DOCKER_USER}" + "/" + "${APP_Name}"
+        jenkins_DNS = "ec2-18-209-35-18.compute-1.amazonaws.com"
     }
 
     stages {
@@ -85,6 +86,14 @@ pipeline {
                 script {
                     sh "docker rmi ${DOCKER_IMAGE}:${BUILD_NUMBER}"
                     sh "docker rmi ${DOCKER_IMAGE}:latest"
+                }
+            }
+        }
+
+        stage("Trigger CD Pipeline") {
+            steps {
+                script {
+                    sh "curl -v -k --user clouduser:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'BUILD_NUMBER=${BUILD_NUMBER}' '${jenkins_DNS}:8080/job/devops-java/buildWithParameters?token=gitops-token'"
                 }
             }
         }
