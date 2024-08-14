@@ -14,7 +14,7 @@ FROM tomcat:latest
 COPY /webapp/target/*.war /usr/local/tomcat/webapps/
 
 # Copy the JAR file from the first stage into the Tomcat container
-COPY --from=jar-build /app/server.jar /usr/local/tomcat/server.jar
+COPY --from=jar-build /home/ubuntu/workspace/devops-java/server.jar /usr/local/tomcat/server.jar
 
 # Start both Tomcat and the Java application
 CMD ["sh", "-c", "catalina.sh run & java -jar /usr/local/tomcat/server.jar"]
