@@ -60,9 +60,9 @@ pipeline {
     }
 
     post {
-        always {
-            cleanWs() // Clean workspace after build
-        }
+        // always {
+        //     cleanWs() // Clean workspace after build
+        // }
         success {
             echo 'Build and push completed successfully!'
         }
