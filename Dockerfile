@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim AS jar-build
 WORKDIR /app
 
 # Copy the JAR file to the build directory
-COPY /app/target/server.jar /app/server.jar
+COPY /server/target/server.jar /app/server.jar
 
 # Second stage: Use Tomcat as a base and copy WAR and JAR files
 FROM tomcat:latest
