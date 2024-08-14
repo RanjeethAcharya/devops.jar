@@ -23,3 +23,4 @@ CMD ["sh", "-c", "catalina.sh run & java -jar /usr/local/tomcat/server.jar"]
 # FROM tomcat:latest
 # RUN cp -R  /usr/local/tomcat/webapps.dist/*  /usr/local/tomcat/webapps
 # COPY /webapp/target/*.war /usr/local/tomcat/webapps
+
