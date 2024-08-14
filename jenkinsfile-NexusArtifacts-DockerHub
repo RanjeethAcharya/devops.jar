@@ -10,14 +10,15 @@ pipeline {
         ARTIFACT_VERSION = '1.0-SNAPSHOT'
         DOCKER_IMAGE_NAME = 'ranjeeth3302/devops-java'
         DOCKER_TAG = 'latest'
+        git_repo_git = "https://github.com/RanjeethAcharya/devops.jar.git"
     }
 
     stages {
-        stage('Checkout') {
+        stage("Git Checkout") {
             steps {
-                echo 'Checking out source code...'
-                // Replace with your version control checkout step if necessary
-                git 'https://github.com/RanjeethAcharya/devops.jar.git'
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']],
+                    userRemoteConfigs: [[credentialsId: 'github', url: "${git_repo_git}"]]
+                ])
             }
         }
 
